@@ -34,13 +34,14 @@ module.exports = {
 			chunks: 'all',
 			priority: 10, //
 			enforce: true //
+		},
+		// 下一步要指向CDN
+		vendor: {
+			name: 'vendor',
+			chunks: 'all', // async module or not
+			test: /[\\/]node_modules[\\/]/,
+			priority: -10, //
+			enforce: true //
 		}
-		// vendor: {
-		// 	name: 'vendor',
-		// 	chunks: 'all', // async module or not
-		// 	test: /[\\/]node_modules[\\/]/,
-		// 	priority: -10, //
-		// 	enforce: true //
-		// }
 	}
 };

@@ -1,11 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
-const basePath = path.resolve(__dirname, '../');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const asserts = require('./asserts');
-const devMode = process.env.NODE_ENV !== 'production';
+const basePath = path.resolve(__dirname, '../');
 const ASSET_PATH = process.env.ASSET_PATH || '/';
+const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
 	entry: './demo/app.tsx',
@@ -14,7 +16,6 @@ module.exports = {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				// use: 'ts-loader',
 				use: [
 					{
 						loader: 'babel-loader',
@@ -31,6 +32,17 @@ module.exports = {
 					}
 				],
 				exclude: /node_modules/
+			},
+			{
+				test: /\.(c|le)ss$/,
+				exclude: /(node_modules|bower_components)/,
+				use: [
+					devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+					'css-loader',
+					'postcss-loader',
+					'less-loader'
+					// 'sass-loader',
+				]
 			}
 		]
 	},
