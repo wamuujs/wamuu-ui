@@ -12,8 +12,32 @@ module.exports = {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				use: 'ts-loader',
+				use: [
+					{
+						loader: 'babel-loader',
+						options: {
+							presets: ['@babel/preset-env', '@babel/preset-react'],
+							plugins: ['@babel/plugin-transform-runtime']
+						}
+					},
+					{
+						loader: 'ts-loader',
+						options: {
+							transpileOnly: true
+						}
+					}
+				],
 				exclude: /node_modules/
+			},
+			{
+				test: /\.(c|le)ss$/,
+				exclude: /(node_modules|bower_components)/,
+				use: [
+					devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+					'css-loader',
+					'postcss-loader',
+					'less-loader'
+				]
 			}
 		]
 	},
@@ -34,45 +58,6 @@ module.exports = {
 				return chunk.name !== 'vendors~main';
 			},
 			cacheGroups: asserts.CACHE_GROUPS
-			/*
-			cacheGroups: {
-				Header: {
-					name: 'Header',
-					test: /components\/Header/,
-					chunks: 'all',
-					priority: 10, //
-					enforce: true // ignore minSize & minChunks & maxAsyncRequests & maxInitialRequests options and always create chunks
-				},
-				Footer: {
-					name: 'Footer',
-					test: /components\/Footer/,
-					chunks: 'all',
-					priority: 10, //
-					enforce: true //
-				}
-
-        vendor: {
-          name: 'vendor',
-          chunks: 'all', // async module or not
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10, // 
-          enforce: true // 
-        },
-        commons: {
-          name: 'commons',
-          chunks: 'all',
-          test: /src\/containers|src\/components|src\/config|src\/css|src\/utils/,
-          priority: -20, // 
-          enforce: true // 
-        },
-        styles: {
-          name: 'styles',
-          test: /\.css$/,
-          chunks: 'all',
-          enforce: true
-        }
-      
-			}  */
 		}
 	}
 };
