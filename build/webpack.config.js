@@ -69,7 +69,7 @@ module.exports = {
 				test: /\.css$/,
 				// exclude: /(node_modules|bower_components)/,
 				use: [
-					MiniCssExtractPlugin.loader,
+					// MiniCssExtractPlugin.loader,
 					{
 						loader: 'css-loader',
 						options: {
@@ -88,7 +88,7 @@ module.exports = {
 				test: /\.less$/,
 				// exclude: /(node_modules|bower_components)/,
 				use: [
-					MiniCssExtractPlugin.loader,
+					// MiniCssExtractPlugin.loader,
 					{
 						loader: 'css-loader',
 						options: {
@@ -153,6 +153,11 @@ module.exports = {
 		path: path.resolve(basePath, './lib')
 	},
 	plugins: [
+		new MiniCssExtractPlugin({
+			// 类似 webpackOptions.output里面的配置 可以忽略
+			filename: '[name].css',
+			chunkFilename: '[id].css'
+		}),
 		new CleanWebpackPlugin(),
 		new webpack.BannerPlugin(`
 	${pkg.name} v${pkg.version}
