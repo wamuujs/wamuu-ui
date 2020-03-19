@@ -19,5 +19,3 @@ req.keys().forEach(mod => {
  * build for `dist/antd-mobile.js`
  */
 module.exports = require('./lib/components');
-
-const a = 1;

@@ -5,9 +5,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const asserts = require('./asserts');
 const devMode = process.env.NODE_ENV !== 'production';
 
+const babelConfig = require('./getBabelCommonConfig')(false);
+
 module.exports = {
-	entry: './components/index.tsx',
-	mode: 'development',
+	entry: './components/index.ts',
+	mode: 'production',
 	module: {
 		rules: [
 			{
@@ -15,10 +17,7 @@ module.exports = {
 				use: [
 					{
 						loader: 'babel-loader',
-						options: {
-							presets: ['@babel/preset-env', '@babel/preset-react'],
-							plugins: ['@babel/plugin-transform-runtime']
-						}
+						options: babelConfig
 					},
 					{
 						loader: 'ts-loader',
@@ -31,7 +30,7 @@ module.exports = {
 			},
 			{
 				test: /\.(c|le)ss$/,
-				exclude: /(node_modules|bower_components)/,
+				// exclude: /(node_modules|bower_components)/,
 				use: [
 					devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
 					'css-loader',
@@ -42,22 +41,31 @@ module.exports = {
 		]
 	},
 	resolve: {
+		alias: {
+			'@': path.resolve(basePath, './components')
+		},
 		extensions: ['.tsx', '.ts', '.js']
+	},
+	externals: {
+		react: {
+			root: 'React',
+			commonjs2: 'react',
+			commonjs: 'react',
+			amd: 'react'
+		},
+		'react-dom': {
+			root: 'ReactDOM',
+			commonjs2: 'react-dom',
+			commonjs: 'react-dom',
+			amd: 'react-dom'
+		}
 	},
 	output: {
 		filename: 'components.js',
-		path: path.resolve(basePath, 'lib'),
-		chunkFilename: '[name]/[name].[chunkhash:8].js'
+		library: 'wamuu-ui',
+		libraryTarget: 'umd',
+		path: path.resolve(basePath, './lib')
 	},
 	plugins: [new CleanWebpackPlugin()],
-	optimization: {
-		splitChunks: {
-			chunks(chunk) {
-				console.log(` chunk.name `, chunk.name);
-				// exclude `my-excluded-chunk`
-				return chunk.name !== 'vendors~main';
-			},
-			cacheGroups: asserts.CACHE_GROUPS
-		}
-	}
+	optimization: {}
 };
