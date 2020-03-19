@@ -1,11 +1,25 @@
 import React from 'react';
+import styles from './styles.less';
+const classNames = require('classnames');
 
-export default class Header extends React.Component {
+interface HeaderProps {
+	className?: string;
+}
+
+export default class Header extends React.Component<HeaderProps, any> {
 	constructor(props: any) {
 		super(props);
 	}
 
 	render() {
-		return <div>Header</div>;
+		const headerClass = classNames(
+			this.props.className,
+			{
+				header: true
+			},
+			styles.header
+		);
+
+		return <div className={headerClass}>Header</div>;
 	}
 }
